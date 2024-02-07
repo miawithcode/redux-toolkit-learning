@@ -118,7 +118,7 @@ ReactDOM.render(
 
 1. 把 Slice 想成 Application Feature，设置 Slice 需要：
    1. 创建 `features` 文件夹
-   2. 在该文件夹下创建表死 feature 的文件夹比如 `cart`
+   2. 在该文件夹下创建代表 feature 的文件夹比如 `cart`
    3. 在 `feartures/cart`文件夹下创建功能 Slice 的`.js`文件，比如 `cartSlice.js`
 
     ```js
@@ -143,14 +143,14 @@ ReactDOM.render(
     export default cartSlice.reducer;
     ```
 
-2. 在 `store.js` 导入 `cartReducer`，`cartReducer` 是我们需要的函数，从之 Slice 中的状态。
+2. 在 `store.js` 导入 `cartReducer`，`cartReducer` 是用于控制 Slice 中的状态的函数。
     ```js
     import { configureStore } from '@reduxjs/toolkit';
     import cartReducer from './features/cart/cartSlice';
 
     export const store = configureStore({
       reducer: {
-        cart: cartReducer,
+        cart: cartReducer, // key 的名字 up to you
       },
     });
     ```
