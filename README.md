@@ -23,18 +23,6 @@
   - [Setup Store](#setup-store)
   - [Setup Provider](#setup-provider)
   - [Setup Cart Slice](#setup-cart-slice)
-- [Redux DevTools](#redux-devtools)
-- [Access store value](#access-store-value)
-- [Hero Icons](#hero-icons)
-- [Setup Cart](#setup-cart)
-- [First Reducer](#first-reducer)
-- [Remove, Increase, Decrease](#remove-increase-decrease)
-- [Modal](#modal)
-  - [modal slice](#modal-slice)
-  - [toggle modal](#toggle-modal)
-- [async functionality with createAsyncThunk](#async-functionality-with-createasyncthunk)
-- [Options](#options)
-- [The extraReducers "builder callback" notation](#the-extrareducers-builder-callback-notation)
 
 ## Get Started
 
