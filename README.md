@@ -11,6 +11,9 @@
 <h2> Table of Content </h2>
 
 - [Get Started](#get-started)
+- [Tool \& Resource](#tool--resource)
+  - [Redux Dev Tool](#redux-dev-tool)
+  - [Hero Icons](#hero-icons)
 - [Redux](#redux)
 - [Redux Toolkit](#redux-toolkit)
   - [Docs](#docs)
@@ -24,14 +27,33 @@
   - [Setup Provider](#setup-provider)
   - [Setup Cart Slice](#setup-cart-slice)
 - [Access store value - useSelector](#access-store-value---useselector)
-- [Tool \& Resource](#tool--resource)
-  - [Redux Dev Tool](#redux-dev-tool)
-  - [Hero Icons](#hero-icons)
+- [First Reducer](#first-reducer)
+  - [Action](#action)
+  - [Invoke Action - useDispatch](#invoke-action---usedispatch)
 
 ## Get Started
 
 1. `npm install`
 2. `npm start`
+
+## Tool & Resource
+
+### Redux Dev Tool
+
+在浏览器安装 [Redux Dev Tool](https://chromewebstore.google.com/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd) 插件
+
+### Hero Icons
+
+[Hero Icons](https://heroicons.com/)
+
+1. 把 icon 设置成一个组件
+2. 样式
+    ```css
+      nav svg {
+        width: 40px;
+        color: var(--clr-white);
+      }
+      ```
 
 ## Redux
 
@@ -188,21 +210,64 @@ const Navbar = () => {
 export default Navbar;
 ```
 
-## Tool & Resource
+## First Reducer
 
-### Redux Dev Tool
+用 `useReducer` 时，总是要返回一个新的状态值，但用 Redux Toolkit 不需要，因为 Redux Toolkit 时也下载了 `Immer` 包。`Immer` 包可以让我们以更方便的方式处理状态值。
 
-在浏览器安装 [Redux Dev Tool](https://chromewebstore.google.com/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd) 插件
+```js
+// cartSlice.js
 
-### Hero Icons
+const cartSlice = createSlice({
+  name: 'cart',
+  initialState,
+  reducers: {
+    clearCart: (state) => {
+      state.cartItems = [];
+    },
+  },
+});
 
-[Hero Icons](https://heroicons.com/)
+export const { clearCart } = cartSlice.actions;
+```
 
-1. 把 icon 设置成一个组件
-2. 样式
-    ```css
-      nav svg {
-        width: 40px;
-        color: var(--clr-white);
-      }
-      ```
+### Action
+
+使用 useReducer 时，需要像这样手动创建 action：
+```js
+const ACTION_TYPE = 'ACTION_TYPE';
+
+const actionCreator = (payload) => {
+  return { type: ACTION_TYPE, payload: payload };
+};
+```
+
+但是使用 Redux Toolkit (Immer)，一旦我们创建了 reducer，Immer 会自动根据 reducer 的名字创建 action。
+
+### Invoke Action - useDispatch
+
+用 useDispatch 来调用 action
+
+```js
+// CartContainer.js
+
+import React from 'react';
+import CartItem from './CartItem';
+import { useDispatch, useSelector } from 'react-redux';
+
+const CartContainer = () => {
+  const dispatch = useDispatch();
+
+  return (
+    <button
+      className='btn clear-btn'
+      onClick={() => {
+        dispatch(clearCart());
+      }}
+    >
+      clear cart
+    </button>
+  );
+};
+
+export default CartContainer;
+```
