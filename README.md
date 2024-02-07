@@ -23,6 +23,10 @@
   - [Setup Store](#setup-store)
   - [Setup Provider](#setup-provider)
   - [Setup Cart Slice](#setup-cart-slice)
+- [Access store value - useSelector](#access-store-value---useselector)
+- [Tool \& Resource](#tool--resource)
+  - [Redux Dev Tool](#redux-dev-tool)
+  - [Hero Icons](#hero-icons)
 
 ## Get Started
 
@@ -154,3 +158,49 @@ ReactDOM.render(
       },
     });
     ```
+
+## Access store value - useSelector
+
+用 `useSelector` 在任意一个 component 中获取 `store.js` 中的状态值（`initialState`）
+
+```jsx
+// Navbar.js
+import { CartIcon } from '../icons';
+import { useSelector } from 'react-redux';
+
+const Navbar = () => {
+  const { amount } = useSelector((state) => state.cart);
+
+  return (
+    <nav>
+      <div className='nav-center'>
+        <h3>redux toolkit</h3>
+        <div className='nav-container'>
+          <CartIcon />
+          <div className='amount-container'>
+            <p className='total-amount'>{amount}</p>
+          </div>
+        </div>
+      </div>
+    </nav>
+  );
+};
+export default Navbar;
+```
+
+## Tool & Resource
+
+### Redux Dev Tool
+
+在浏览器安装 [Redux Dev Tool](https://chromewebstore.google.com/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd) 插件
+
+### Hero Icons
+
+[Hero Icons](https://heroicons.com/)
+
+```css
+nav svg {
+  width: 40px;
+  color: var(--clr-white);
+}
+```
