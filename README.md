@@ -198,9 +198,11 @@ export default Navbar;
 
 [Hero Icons](https://heroicons.com/)
 
-```css
-nav svg {
-  width: 40px;
-  color: var(--clr-white);
-}
-```
+1. 把 icon 设置成一个组件
+2. 样式
+    ```css
+      nav svg {
+        width: 40px;
+        color: var(--clr-white);
+      }
+      ```
