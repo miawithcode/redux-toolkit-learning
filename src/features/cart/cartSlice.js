@@ -27,11 +27,21 @@ const cartSlice = createSlice({
       const cartItem = state.cartItems.find((item) => item.id === payload.id);
       cartItem.amount = cartItem.amount - 1;
     },
+    calculateTotals: (state) => {
+      let totalAmount = 0;
+      let totalPrice = 0;
+      state.cartItems.forEach((item) => {
+        totalAmount += item.amount; // totalAmount = totalAmount + item.amount;
+        totalPrice += item.amount * item.price;
+      });
+      state.amount = totalAmount;
+      state.total = totalPrice;
+    },
   },
 });
 
 // console.log(cartSlice);
 
-export const { clearCart, removeItem, increase, decrease } = cartSlice.actions;
+export const { clearCart, removeItem, increase, decrease, calculateTotals } = cartSlice.actions;
 
 export default cartSlice.reducer;
