@@ -1,5 +1,9 @@
 <h1> Redux Toolkit Learning </h1>
 
+<div align="center">
+  <img src="./public/screenshot.png" />
+</div>
+
 **这个项目通过管理一个购物车中的状态来学习 Redux Toolkit。**
 
 在大型项目中，尤其是团队协作的项目，最大的挑战之一就是状态管理（state management）。在拥有大量功能（feature）的大型项目中，Context API 有其局限性。为了解决这个问题，社区中最 popular 的 state library 是 [Redux](https://redux.js.org/)。
@@ -327,7 +331,7 @@ The latest version of Redux-Toolkit no longer supports the "object" form for bot
 > Instructor: I will address this in the Builder Callback Notation video. For now, you can set up functions and extraReducers, but please be aware that we will refactor the code later. Therefore, don't be surprised if the following code does not work:
 
 ```js
-// WILL NOT WORK !!!
+// bWILL NOT WORK !!!
 
 extraReducers: {
     [getCartItems.pending]: (state) => {
