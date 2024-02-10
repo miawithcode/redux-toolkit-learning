@@ -32,7 +32,12 @@
   - [Invoke Action - useDispatch](#invoke-action---usedispatch)
 - [Modal](#modal)
   - [Prevent body scrolling when modal is open](#prevent-body-scrolling-when-modal-is-open)
-- [async functionality with createAsyncThunk](#async-functionality-with-createasyncthunk)
+- [Setup Asynchronous Functionality with Redux Toolkit](#setup-asynchronous-functionality-with-redux-toolkit)
+  - [Important Update!](#important-update)
+  - [API](#api)
+  - [CreateAsyncThunk](#createasyncthunk)
+  - [CreateAsyncThunk with Axios](#createasyncthunk-with-axios)
+  - [The extraReducers "builder callback" notation](#the-extrareducers-builder-callback-notation)
 
 ## Get Started
 
@@ -306,11 +311,186 @@ import { useSelector } from 'react-redux';
 
 function App() {
   const { isOpen } = useSelector((store) => store.modal);
-  
+
   useEffect(() => {
     document.body.classList.toggle('modal-open', isOpen);
   }, [isOpen]);
 }
 ```
 
-## async functionality with createAsyncThunk
+## Setup Asynchronous Functionality with Redux Toolkit
+
+### Important Update!
+
+The latest version of Redux-Toolkit no longer supports the "object" form for both createReducer and createSlice.extraReducers in RTK 2.0. This is because the builder callback form is equally concise in terms of lines of code, and it integrates more effectively with TypeScript.
+
+> Instructor: I will address this in the Builder Callback Notation video. For now, you can set up functions and extraReducers, but please be aware that we will refactor the code later. Therefore, don't be surprised if the following code does not work:
+
+```js
+// WILL NOT WORK !!!
+
+extraReducers: {
+    [getCartItems.pending]: (state) => {
+      state.isLoading = true;
+    },
+    [getCartItems.fulfilled]: (state, action) => {
+      console.log(action);
+      state.isLoading = false;
+      state.cartItems = action.payload;
+    },
+    [getCartItems.rejected]: (state) => {
+      state.isLoading = false;
+    },
+  },
+```
+
+Instead we need to use builder callback form
+
+```js
+extraReducers: (builder) => {
+    builder
+      .addCase(getCartItems.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getCartItems.fulfilled, (state, action) => {
+        // console.log(action);
+        state.isLoading = false;
+        state.cartItems = action.payload;
+      })
+      .addCase(getCartItems.rejected, (state, action) => {
+        console.log(action);
+        state.isLoading = false;
+      });
+  },
+```
+
+### API
+
+Data API - `https://course-api.com/react-useReducer-cart-project`
+
+### CreateAsyncThunk
+
+不能直接在现有的 reducers 中 fetch data，要用到 Redux Toolkit 内建的 redux-thunk 库。
+
+`createAsyncThunk` 需要两个参数，一个 action 和一个 callback function。
+
+在 `cartSlice` 中创建 `extraReducers`，在其中创建 lifecycle actions：
+- `function.pending`
+- `function.fullfilled`
+- `function.rejected`
+
+```js
+// cartSlice.js
+
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+
+const url = 'https://course-api.com/react-useReducer-cart-project';
+
+export const getCartItems = createAsyncThunk('cart/getCartItems', () => {
+  return fetch(url)
+    .then((resp) => resp.json())
+    .catch((err) => console.log(error));
+});
+
+const cartSlice = createSlice({
+  name: 'cart',
+  initialState,
+  extraReducers: {
+    [getCartItems.pending]: (state) => {
+      state.isLoading = true;
+    },
+    [getCartItems.fulfilled]: (state, action) => {
+      console.log(action);
+      state.isLoading = false;
+      state.cartItems = action.payload;
+    },
+    [getCartItems.rejected]: (state) => {
+      state.isLoading = false;
+    },
+  },
+});
+```
+
+```js
+// App.js
+
+import { calculateTotals, getCartItems } from './features/cart/cartSlice';
+
+function App() {
+  const { cartItems, isLoading } = useSelector((state) => state.cart);
+
+  useEffect(() => {
+    dispatch(getCartItems());
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className='loading'>
+        <h1>Loading...</h1>
+      </div>
+    );
+  }
+
+  return (
+    <main>
+      {isOpen && <Modal />}
+      <Navbar />
+      <CartContainer />
+    </main>
+  );
+}
+
+export default App;
+```
+
+### CreateAsyncThunk with Axios
+
+```js
+// cartSlice.js
+
+export const getCartItems = createAsyncThunk(
+  'cart/getCartItems',
+  async (name, thunkAPI) => {
+    try {
+      // console.log(name);
+      // console.log(thunkAPI);
+      // console.log(thunkAPI.getState());
+      // thunkAPI.dispatch(openModal());
+      const resp = await axios(url);
+
+      return resp.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue('something went wrong');
+    }
+  }
+);
+```
+
+### The extraReducers "builder callback" notation
+
+```js
+// cartSlice.js
+
+const cartSlice = createSlice({
+  name: 'cart',
+  initialState,
+  reducers: {
+    // reducers
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(getCartItems.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getCartItems.fulfilled, (state, action) => {
+        // console.log(action);
+        state.isLoading = false;
+        state.cartItems = action.payload;
+      })
+      .addCase(getCartItems.rejected, (state, action) => {
+        console.log(action);
+        state.isLoading = false;
+      });
+  },
+});
+```
